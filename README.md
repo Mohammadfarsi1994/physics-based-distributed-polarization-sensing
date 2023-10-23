@@ -16,7 +16,7 @@ Email: mohammad.farsi1994@gmail.com
 - Numpy
 - matplotlib
 
-# Usage 
+# Usage Example
 main(num_segments = 5)
 
 
