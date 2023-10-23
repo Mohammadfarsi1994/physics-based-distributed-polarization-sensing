@@ -201,3 +201,7 @@ class InverseScattering():
             plt.xlabel('Segment Index')
             plt.legend(loc='upper right')
             i +=1
+        
+        plt.savefig('results.png')
+        plt.close()
+        
