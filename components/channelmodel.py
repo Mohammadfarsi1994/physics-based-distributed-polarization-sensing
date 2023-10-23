@@ -1,21 +1,32 @@
-"""This is Fiber Model.
+"""
+This channel model is based on the work titled "Polarization-Dependent Loss: New Definition and Measurement Techniques, 2015" authored by NO ́E et al.
 
-This class creates a channel response given number of steps.
+This class is designed to take the following inputs:
+    - The number of segments.
+    - An input matrix for the channel, represented as a 2x2 matrix.
+
+It is capable of generating random channel parameters in the form of a dictionary, including:
+    - 'tau': Parameters related to Differential Group Delay (DGD).
+    - 'psi': Parameters associated with the orientation of polarization.
+    - 'phi': Parameters pertaining to polarization retardation.
+    - 'gamma': Parameters for Polarization-Dependent Loss (PDL).
+
+Given a dictionary of channel parameters and the number of frequency samples, this class can generate both time and frequency samples of the channel.
 """
 
-#__all__ = ['a', 'b', 'c']
 __version__ = '0.1'
-__author__ = 'Mohammad Farsi'
+__author__ = 'Mohammad Farsi (mohammad.farsi1994@gmail.com)'
+
 
 import torch as tc
 import numpy as np
 #import complexPyTorch as ctorch
 
 class ChannelModel():
-    def __init__(self, num_segments=10, num_pol=2, h_init=tc.eye(2), device='cpu'):
+    def __init__(self, num_segments=10, h_init=tc.eye(2), device='cpu'):
         self.device = device
         self.num_segments = num_segments
-        self.num_pol = num_pol
+        self.num_pol = 2
         self.h_init = h_init
         #self.device = tc.device("cuda:0" if tc.cuda.is_available() else "cpu")
     

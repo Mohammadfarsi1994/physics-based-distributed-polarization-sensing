@@ -1,20 +1,24 @@
-"""This is Inverse Scattering Class.
+"""
+This is the Inverse Scattering Class.
 
-The implementation is based on 
-"NO ́Eet al.: Polarization-Dependent Loss: New Definition and Measurment Techniques, 2015"
+The implementation is founded on the research presented in "Polarization-Dependent Loss: New Definition and Measurement Techniques, 2015" by NO ́E et al.
 
-This class gets the impulse response elements and for each fiber segment computes \n:
-tau: DGD parameters
-psi: Orientation parameters
-phi: retardation parameters
-gamma: PDL parameters
+Within this class, the following functionality is provided:
+- Accepting the impulse response elements as input, it computes the following parameters for each fiber segment:
+    - tau: Parameters pertaining to Differential Group Delay (DGD).
+    - psi: Parameters associated with the orientation of polarization.
+    - phi: Parameters related to polarization retardation.
+    - gamma: Parameters for Polarization-Dependent Loss (PDL).
+
+For more information and to access the source code, please visit the GitHub repository: https://github.com/Mohammadfarsi1994/inverse-scattering
 """
 
 #__all__ = ['a', 'b', 'c']
 __version__ = '0.1'
-__author__ = 'Mohammad Farsi'
+__author__ = 'Mohammad Farsi (mohammad.farsi1994@gmail.com)'
 
 import torch as tc
+import matplotlib.pyplot as plt
 class InverseScattering():
     
     def __init__(self,num_segments = 10, tau = 1, device = 'cpu'):
@@ -23,6 +27,9 @@ class InverseScattering():
         self.tau = tau
         self.num_pol = 2
         self.device = device
+        self.gamma_vec = tc.zeros( self.num_segments, device=self.device).to(tc.double)
+        self.phi_vec = tc.zeros( self.num_segments, device=self.device).to(tc.double)
+        self.psi_vec = tc.zeros( self.num_segments, device=self.device).to(tc.double)
         
 
 
@@ -37,17 +44,8 @@ class InverseScattering():
         Returns
         -------
         h0                  : tensor (num_segments, 2, 2)
-                             The time response of the input (back scattered to find the input)
-        estimated_params    : dict of tensors (4, num_segments) with estimated parameters with keys
-                             'gamma'--> PDL parameters
-                             'phi' --> retardation parameters
-                             'psi' --> orientation parameters
-                             'tau' --> None as it is not estimated                    
+                             The time response of the input (back scattered to find the input)           
         """
-        estimated_params = {'gamma':None, 'phi': None, 'psi':None, 'tau': None}
-        self.gamma_vec = tc.zeros( self.num_segments, device=self.device).to(tc.double)
-        self.phi_vec = tc.zeros( self.num_segments, device=self.device).to(tc.double)
-        self.psi_vec = tc.zeros( self.num_segments, device=self.device).to(tc.double)
         hi  = ht[0:self.num_segments+1,:,:].to(self.device)
         for i in range( self.num_segments, 0, -1):
            
@@ -73,20 +71,19 @@ class InverseScattering():
             self.psi_vec[i-1] = psi_i
         
         h0 = hi
-        
-        estimated_params ['gamma'] = self.gamma_vec
-        estimated_params ['phi'] = self.phi_vec
-        estimated_params ['psi'] = self.psi_vec
-        
-        return (h0, estimated_params)    
+          
+        return h0
             
     def get_params(self):
         """_summary_
 
         Returns
         -------
-        _type_
-            _description_
+        estimated_params : dict of tensors (4, num_segments) with estimated parameters with keys
+                             'gamma'--> PDL parameters
+                             'phi' --> retardation parameters
+                             'psi' --> orientation parameters
+                             'tau' --> None as it is not estimated   
         """
         invscat_est_params = {'gamma':self.gamma_vec.detach()
                              ,'phi': self.phi_vec.detach()
@@ -187,3 +184,20 @@ class InverseScattering():
         
         return (phi, psi)
     
+    
+    def show_results(self,true_params, estimated_params):
+        plt.figure(layout='constrained', figsize=(12, 4))
+        i = 1
+        for key in true_params:
+            plt.subplot(1,4,i)
+            if key=='phi' or key=='psi':
+                plt.stem(tc.abs(tc.cos(true_params[key])), linefmt='r-', label='True')
+                plt.stem(tc.abs(tc.cos(estimated_params[key])), markerfmt='go', linefmt='b--', label='Inverse Scattering')
+                plt.ylabel(rf'$|\cos(\{key})|$')
+            else:
+                plt.stem(true_params[key], linefmt='r-', label='True')
+                plt.stem(estimated_params[key], markerfmt='go', linefmt='b--', label='Inverse Scattering')
+                plt.ylabel(rf'$\{key}$')
+            plt.xlabel('Segment Index')
+            plt.legend(loc='upper right')
+            i +=1
