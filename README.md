@@ -10,3 +10,13 @@ Please see the notebook for more information.
 
 Author: Mohammad Farsi 
 Email: mohammad.farsi1994@gmail.com
+
+# Required Packages 
+- PyTorch
+- Numpy
+- matplotlib
+
+# Usage 
+main(num_segments = 5)
+
+
