@@ -8,8 +8,8 @@ The implementation is based on [1].
 - The algorithm experiences numerical instability when the number of segments increases (N>10)
 
 # Required Packages 
-1- Unzip the package to your local directory, then 
-2- Run 'pip install -r requirements.txt' to download the required packages;
+- Unzip the package to your local directory, then
+- Run 'pip install -r requirements.txt' to download the required packages;
 
 # Usage Example
 ``` console
