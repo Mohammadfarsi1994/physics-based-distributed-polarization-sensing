@@ -1,16 +1,16 @@
 # Inverse Scattering Algorithm:
 The code is based on [PyTorch](https://pytorch.org/). 
 
-The implementation is based on "Polarization-Dependent Loss: New Definition and Measurement Techniques, 2015" by Noe et al." 
+The implementation is based on "[Polarization-Dependent Loss: New Definition and Measurement Techniques](https://ieeexplore.ieee.org/abstract/document/6999936)" by Noe et al. 
 
 - The algorithm is susceptible to channel estimation noise
-- We have proposed a learning-based approach that has a higher tolerance to estimation noise see ("M. Farsi, C.Häger, M. Karlsson, E. Agrell, "Learning to Extract Distributed Polarization Sensing Data from Noisy Jones Matrices")
+- We have proposed a learning-based approach that has a higher tolerance to estimation noise ("M. Farsi, C.Häger, M. Karlsson, E. Agrell, "Learning to Extract Distributed Polarization Sensing Data from Noisy Jones Matrices")
 - The algorithm experiences numerical instability when the number of segments increases (N>10)
 
 # Required Packages 
-- pyTorch
-- numpy
-- matplotlib
+- PyTorch
+- NumPy
+- Matplotlib
 
 # Usage Example
 ``` console
